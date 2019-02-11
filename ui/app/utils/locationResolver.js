@@ -5,15 +5,9 @@ export function getAPI() {
   if (API_URL) {
     return API_URL;
   }
-  if (process.env.API_URL) {
-    API_URL = process.env.API_URL;
-  }
-  else {
-    const loc = window.location;
-    API_URL = `${loc.protocol}//${loc.hostname}:7500`;
-  }
-  console.log(`locationResolver::getAPI`); // TODO: REMOVE!!!!
-  console.log(API_URL); // TODO: REMOVE!!!!
+  const loc = window.location;
+  const host = process.env.API_HOST || `${loc.hostname}:7500`;
+  API_URL = `${loc.protocol}//${host}`;
   return API_URL;
 }
 
@@ -21,21 +15,16 @@ export function getWS() {
   if (WS_URL) {
     return WS_URL;
   }
-  if (process.env.WS_URL) {
-    WS_URL = process.env.WS_URL;
+  const loc = window.location;
+  const host = process.env.API_HOST || `${loc.hostname}:7500`;
+  if (loc.protocol === 'https:') {
+    WS_URL = 'wss:';
   }
   else {
-    const loc = window.location;
-    if (loc.protocol === 'https:') {
-      WS_URL = 'wss:';
-    }
-    else {
-      WS_URL = 'ws:';
-    }
-    WS_URL += `//${loc.hostname}:7500`;
+    WS_URL = 'ws:';
   }
-  console.log(`locationResolver::WS`); // TODO: REMOVE!!!!
-  console.log(WS_URL); // TODO: REMOVE!!!!
+  WS_URL += `//${host}`;
+
   return WS_URL;
 
 }
