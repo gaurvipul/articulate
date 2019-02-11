@@ -1,4 +1,5 @@
 import HapiSwagger from 'hapi-swagger';
+import HapiSwaggeredUI from 'hapi-swaggered-ui';
 import Inert from 'inert';
 import Vision from 'vision';
 
@@ -10,18 +11,6 @@ module.exports = {
     async register(server, options) {
 
         // We added in HapiSwaggerUI because HapiSwagger hadn't been updated and had an SSL bug.
-        const swaggerUIOptions = {
-            name: 'Articulate API Documentation',
-            title: 'Articulate API Documentation',
-            path: '/documentation',
-            swaggerOptions: {
-                validatorUrl: false
-            },
-            authorization: false,
-            schemes: options.schemes,
-            host: options.host
-        };
-        swaggerUIOptions.basePath = options.basePath ? options.basePath : null;
         await server.register([
             Inert,
             Vision,
@@ -30,9 +19,9 @@ module.exports = {
                 options
             },
             {
-                plugin: require('hapi-swaggered-ui'),
+                plugin: HapiSwaggeredUI,
                 options: {
-                    title: 'Example API2',
+                    title: options.info.title,
                     path: '/documentation',
                     swaggerEndpoint: '/swagger.json',
                     swaggerOptions: {
